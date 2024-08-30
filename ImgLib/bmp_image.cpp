@@ -75,6 +75,9 @@ namespace img_lib {
     // напишите эту функцию
     Image LoadBMP(const Path& file) {
         ifstream ifs(file, ios::binary);
+        if (!ifs.is_open()) {
+            return {};
+        }
 
         BitmapFileHeader file_header;
         BitmapInfoHeader info_header;
@@ -84,9 +87,18 @@ namespace img_lib {
 
         // мы поддерживаем изображения только формата P6
         // с максимальным значением цвета 255
-        if (file_header.b_symbol_ != 'B' || file_header.m_symbol_ != 'M' || file_header.offset_data_ != 54 || info_header.header_size_ != 40
-            || info_header.planes_ != 1 || info_header.bits_for_pixel_ != 24 || info_header.compression_type_ != 0 || info_header.width_resolution_ != 11811
-            || info_header.height_resolution_ != 11811 || info_header.used_colors_ != 0 || info_header.significant_colors_ != 0x1000000) {
+        if (file_header.b_symbol_ != 'B' 
+            || file_header.m_symbol_ != 'M' 
+            || file_header.offset_data_ != 54 
+            || info_header.header_size_ != 40
+            || info_header.planes_ != 1 
+            || info_header.bits_for_pixel_ != 24 
+            || info_header.compression_type_ != 0 
+            || info_header.width_resolution_ != 11811
+            || info_header.height_resolution_ != 11811 
+            || info_header.used_colors_ != 0 
+            || info_header.significant_colors_ != 0x1000000) {
+
             return {};
         }
 
