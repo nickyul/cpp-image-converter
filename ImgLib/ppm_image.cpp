@@ -23,9 +23,9 @@ bool SavePPM(const Path& file, const Image& image) {
     for (int y = 0; y < h; ++y) {
         const Color* line = image.GetLine(y);
         for (int x = 0; x < w; ++x) {
-            buff[x * 3 + 0] = static_cast<char>(line[x].r);
+            buff[x * 3 + 0] = static_cast<char>(line[x].b);
             buff[x * 3 + 1] = static_cast<char>(line[x].g);
-            buff[x * 3 + 2] = static_cast<char>(line[x].b);
+            buff[x * 3 + 2] = static_cast<char>(line[x].r);
         }
         out.write(buff.data(), w * 3);
     }
@@ -37,6 +37,9 @@ Image LoadPPM(const Path& file) {
     // открываем поток с флагом ios::binary
     // поскольку будем читать данные в двоичном формате
     ifstream ifs(file, ios::binary);
+    if (!ifs.is_open()) {
+        return {};
+    }
     std::string sign;
     int w, h, color_max;
 
@@ -64,9 +67,9 @@ Image LoadPPM(const Path& file) {
         ifs.read(buff.data(), w * 3);
 
         for (int x = 0; x < w; ++x) {
-            line[x].r = static_cast<byte>(buff[x * 3 + 0]);
+            line[x].b = static_cast<byte>(buff[x * 3 + 0]);
             line[x].g = static_cast<byte>(buff[x * 3 + 1]);
-            line[x].b = static_cast<byte>(buff[x * 3 + 2]);
+            line[x].r = static_cast<byte>(buff[x * 3 + 2]);
         }
     }
 
